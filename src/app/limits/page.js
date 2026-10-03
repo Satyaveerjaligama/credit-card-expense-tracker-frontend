@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../lib/api';
 import PageHeader from '../../components/PageHeader';
+import CustomDropdown from '../../components/CustomDropdown';
 import {
   SlidersHorizontal,
   CreditCard,
@@ -14,7 +15,16 @@ import {
   CheckCircle2,
   AlertTriangle,
   Sparkles,
+  Coins,
 } from 'lucide-react';
+
+const CURRENCY_OPTIONS = [
+  { value: '₹', label: '₹ (INR Rupee)', badge: 'INR' },
+  { value: '$', label: '$ (USD Dollar)', badge: 'USD' },
+  { value: '€', label: '€ (EUR Euro)', badge: 'EUR' },
+  { value: '£', label: '£ (GBP Pound)', badge: 'GBP' },
+  { value: 'AED', label: 'AED (Dirham)', badge: 'AED' },
+];
 
 export default function LimitsPage() {
   const { user, isAuthenticated, refreshUser } = useAuth();
@@ -173,7 +183,7 @@ export default function LimitsPage() {
                 />
               </div>
               <span className="form-hint">
-                The total credit line sanctioned by your bank (e.g., 1 Lakh = 1,00,000).
+                The total credit line sanctioned by your bank.
               </span>
             </div>
 
@@ -194,7 +204,7 @@ export default function LimitsPage() {
                 placeholder="e.g. 10000"
               />
               <span className="form-hint">
-                Your monthly target budget cap (e.g., 10,000) that you do not want to exceed.
+                Your monthly target budget cap that you do not want to exceed.
               </span>
             </div>
 
@@ -227,7 +237,7 @@ export default function LimitsPage() {
             </div>
 
             {/* Billing Cycle Day */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', alignItems: "center" }}>
               <div className="form-group">
                 <label className="form-label" htmlFor="input-billing-day">
                   Billing Cycle Start Day
@@ -248,18 +258,14 @@ export default function LimitsPage() {
                 <label className="form-label" htmlFor="input-currency">
                   Currency Symbol
                 </label>
-                <select
+                <CustomDropdown
                   id="input-currency"
                   value={currencySymbol}
-                  onChange={(e) => setCurrencySymbol(e.target.value)}
-                  className="form-select"
-                >
-                  <option value="₹">₹ (INR Rupee)</option>
-                  <option value="$">$ (USD Dollar)</option>
-                  <option value="€">€ (EUR Euro)</option>
-                  <option value="£">£ (GBP Pound)</option>
-                  <option value="AED">AED (Dirham)</option>
-                </select>
+                  onChange={(val) => setCurrencySymbol(val)}
+                  options={CURRENCY_OPTIONS}
+                  icon={Coins}
+                  width="100%"
+                />
                 <span className="form-hint">Display currency</span>
               </div>
             </div>

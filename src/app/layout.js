@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar';
 import { ShieldCheck, Lock, Database } from 'lucide-react';
 
 export const metadata = {
-  title: 'AuraSpend — Credit Card Expense & Limit Tracker',
+  title: 'SwipeSense - Credit Card Expense & Limit Tracker',
   description:
     'Track your credit card expenses against your personal spending limit, receive real-time threshold warnings, and manage your budget with production-grade encryption.',
   keywords: 'credit card tracker, expense tracker, personal budget, credit card limit alert, finance manager',
@@ -40,7 +40,7 @@ export default function RootLayout({ children }) {
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
                 <span style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-main)' }}>
-                  AuraSpend
+                  SwipeSense
                 </span>
                 <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                   © 2026 Production Credit Expense Tracker

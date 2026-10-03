@@ -129,7 +129,7 @@ export default function RegisterPage() {
               type="text"
               id="register-name"
               required
-              placeholder="e.g. Satya Sharma"
+              placeholder="e.g. Test name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="form-input"
@@ -217,7 +217,7 @@ export default function RegisterPage() {
 
             <div style={{ marginTop: '0.75rem' }}>
               <label className="form-label" htmlFor="register-card-last4" style={{ fontSize: '0.775rem' }}>
-                Card Last 4 Digits (Optional, AES-256 encrypted)
+                Card Last 4 Digits
               </label>
               <input
                 type="text"

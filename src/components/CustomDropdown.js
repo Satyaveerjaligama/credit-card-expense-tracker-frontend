@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown, Check, Calendar } from 'lucide-react';
 
 /**
- * CustomDropdown component tailored to AuraSpend pastel sage design system.
+ * CustomDropdown component tailored to SwipeSense pastel sage design system.
  * Replaces unstyled native selects with an elegant, accessible popover menu.
  *
  * @param {Object} props
@@ -21,9 +21,9 @@ export default function CustomDropdown({
   value,
   onChange,
   options = [],
-  id = 'select-history-months',
-  icon: Icon = Calendar,
-  label = 'Timeframe',
+  id = 'select-dropdown',
+  icon: Icon = null,
+  label = '',
   align = 'right',
   width = 'auto',
 }) {
@@ -31,8 +31,11 @@ export default function CustomDropdown({
   const containerRef = useRef(null);
   const triggerRef = useRef(null);
 
+  const isFullWidth = width === '100%';
+
   // Find currently selected option
-  const selectedOption = options.find((opt) => opt.value === value) || options[0];
+  const selectedOption =
+    options.find((opt) => String(opt.value) === String(value)) || options[0];
 
   // Close dropdown on click outside
   useEffect(() => {
@@ -61,7 +64,9 @@ export default function CustomDropdown({
         setIsOpen(true);
         return;
       }
-      const currentIndex = options.findIndex((opt) => opt.value === value);
+      const currentIndex = options.findIndex(
+        (opt) => String(opt.value) === String(value)
+      );
       let nextIndex = currentIndex;
       if (e.key === 'ArrowDown') {
         nextIndex = (currentIndex + 1) % options.length;
@@ -86,9 +91,11 @@ export default function CustomDropdown({
       ref={containerRef}
       style={{
         position: 'relative',
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '0.6rem',
+        display: isFullWidth ? 'flex' : 'inline-flex',
+        flexDirection: isFullWidth && label ? 'column' : 'row',
+        alignItems: isFullWidth && label ? 'flex-start' : 'center',
+        gap: isFullWidth && label ? '0.4rem' : '0.6rem',
+        width: isFullWidth ? '100%' : 'auto',
         userSelect: 'none',
       }}
       onKeyDown={handleKeyDown}
@@ -97,7 +104,9 @@ export default function CustomDropdown({
       <select
         id={id}
         value={value}
-        onChange={(e) => onChange(Number(e.target.value) || e.target.value)}
+        onChange={(e) =>
+          onChange(typeof value === 'number' ? Number(e.target.value) : e.target.value)
+        }
         tabIndex={-1}
         aria-hidden="true"
         style={{
@@ -150,22 +159,24 @@ export default function CustomDropdown({
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: '0.65rem',
-          padding: '0.45rem 0.85rem',
-          fontSize: '0.85rem',
+          padding: isFullWidth ? '0.65rem 0.875rem' : '0.45rem 0.85rem',
+          fontSize: isFullWidth ? '0.925rem' : '0.85rem',
           fontFamily: 'inherit',
           color: 'var(--text-main)',
           backgroundColor: isOpen ? 'var(--sage-50)' : 'var(--bg-card)',
           border: isOpen
             ? '1px solid var(--sage-400)'
+            : isFullWidth
+            ? '1px solid var(--border-medium)'
             : '1px solid var(--border-light)',
-          borderRadius: '10px',
+          borderRadius: isFullWidth ? 'var(--radius-sm)' : '10px',
           boxShadow: isOpen
             ? '0 0 0 3px rgba(87, 142, 108, 0.15), var(--shadow-sm)'
             : 'var(--shadow-sm)',
           cursor: 'pointer',
           transition: 'all var(--transition-fast)',
-          width: width !== 'auto' ? width : undefined,
-          minWidth: '155px',
+          width: isFullWidth ? '100%' : width !== 'auto' ? width : undefined,
+          minWidth: isFullWidth ? undefined : '155px',
         }}
         className="dropdown-trigger"
       >
@@ -185,7 +196,7 @@ export default function CustomDropdown({
           )}
           <span
             style={{
-              fontSize: '0.85rem',
+              fontSize: isFullWidth ? '0.925rem' : '0.85rem',
               fontWeight: 600,
               color: 'var(--text-main)',
               letterSpacing: '-0.01em',
@@ -220,9 +231,10 @@ export default function CustomDropdown({
           style={{
             position: 'absolute',
             top: 'calc(100% + 6px)',
-            [align === 'right' ? 'right' : 'left']: 0,
+            ...(isFullWidth
+              ? { left: 0, right: 0, width: '100%' }
+              : { [align === 'right' ? 'right' : 'left']: 0, minWidth: '220px' }),
             zIndex: 60,
-            minWidth: '235px',
             backgroundColor: 'rgba(255, 255, 255, 0.98)',
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',

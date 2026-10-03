@@ -10,6 +10,7 @@ import {
   CreditCard,
   Lock,
   ArrowRight,
+  MessageSquare,
 } from 'lucide-react';
 
 /**
@@ -186,7 +187,7 @@ export default function DeleteConfirmationModal({
             </div>
 
             {/* Amount */}
-            <div style={{ textAlign: 'right' }}>
+            <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
               <div
                 style={{
                   fontSize: '1.15rem',
@@ -198,9 +199,23 @@ export default function DeleteConfirmationModal({
                 -{currencySymbol}
                 {Number(transaction.amount || 0).toLocaleString()}
               </div>
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-faint)' }}>
-                {transaction.source || 'Manual'}
-              </span>
+              {transaction.source === 'sms_sync' ? (
+                <span
+                  className="badge badge-amber"
+                  style={{ fontSize: '0.68rem', padding: '0.12rem 0.45rem', marginTop: '0.2rem' }}
+                >
+                  <MessageSquare size={10} /> Bank SMS
+                </span>
+              ) : (
+                <span
+                  className="badge badge-sage"
+                  style={{ fontSize: '0.68rem', padding: '0.12rem 0.45rem', marginTop: '0.2rem' }}
+                >
+                  {transaction.source === 'manual' || !transaction.source
+                    ? 'Manual'
+                    : transaction.source.replace(/_/g, ' ')}
+                </span>
+              )}
             </div>
           </div>
 

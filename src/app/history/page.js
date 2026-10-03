@@ -258,7 +258,7 @@ export default function HistoryPage() {
               strokeDasharray="5 4"
             />
             <text
-              x={graphWidth - paddingX + 6}
+              x={graphWidth - paddingX - 2}
               y={limitY + 3}
               fontSize="9"
               fontWeight="bold"

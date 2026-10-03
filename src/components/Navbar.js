@@ -91,7 +91,7 @@ export default function Navbar() {
               color: 'var(--text-main)',
             }}
           >
-            AuraSpend
+            SwipeSense
           </span>
         </Link>
 
@@ -149,103 +149,112 @@ export default function Navbar() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
           {!isAuthPage && isAuthenticated ? (
             <>
-              {/* Account Section with User Name */}
-              <Link
-                href="/account"
-                id="nav-account-section"
+              {/* Desktop User Actions: Account & Logout */}
+              <div
+                className="desktop-actions"
                 style={{
-                  display: 'flex',
                   alignItems: 'center',
-                  gap: '0.55rem',
-                  padding: '0.32rem 0.85rem 0.32rem 0.38rem',
-                  borderRadius: 'var(--radius-full)',
-                  textDecoration: 'none',
-                  color: 'var(--text-main)',
-                  border: isAccountActive
-                    ? '1px solid var(--sage-400)'
-                    : '1px solid var(--border-light)',
-                  backgroundColor: isAccountActive ? 'var(--sage-50)' : 'var(--bg-card)',
-                  boxShadow: isAccountActive
-                    ? '0 1px 4px rgba(66, 112, 84, 0.12)'
-                    : '0 1px 2px rgba(0, 0, 0, 0.03)',
-                  transition: 'all var(--transition-fast)',
+                  gap: '0.65rem',
                 }}
-                className="account-pill"
-                title="Account Settings"
               >
-                <div
+                {/* Account Section with User Name */}
+                <Link
+                  href="/account"
+                  id="nav-account-section"
                   style={{
-                    width: '30px',
-                    height: '30px',
-                    borderRadius: '50%',
-                    background: 'linear-gradient(135deg, var(--sage-100) 0%, var(--sage-200) 100%)',
-                    color: 'var(--sage-700)',
-                    fontSize: '0.8rem',
-                    fontWeight: 700,
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    border: '1.5px solid #FFFFFF',
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
-                    flexShrink: 0,
+                    gap: '0.55rem',
+                    padding: '0.32rem 0.85rem 0.32rem 0.38rem',
+                    borderRadius: 'var(--radius-full)',
+                    textDecoration: 'none',
+                    color: 'var(--text-main)',
+                    border: isAccountActive
+                      ? '1px solid var(--sage-400)'
+                      : '1px solid var(--border-light)',
+                    backgroundColor: isAccountActive ? 'var(--sage-50)' : 'var(--bg-card)',
+                    boxShadow: isAccountActive
+                      ? '0 1px 4px rgba(66, 112, 84, 0.12)'
+                      : '0 1px 2px rgba(0, 0, 0, 0.03)',
+                    transition: 'all var(--transition-fast)',
                   }}
+                  className="account-pill"
+                  title="Account Settings"
                 >
-                  {user?.name ? user.name[0].toUpperCase() : <User size={14} />}
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.15 }}>
-                  <span
+                  <div
                     style={{
-                      fontSize: '0.66rem',
-                      fontWeight: 600,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.04em',
-                      color: isAccountActive ? 'var(--sage-600)' : 'var(--text-faint)',
+                      width: '30px',
+                      height: '30px',
+                      borderRadius: '50%',
+                      background: 'linear-gradient(135deg, var(--sage-100) 0%, var(--sage-200) 100%)',
+                      color: 'var(--sage-700)',
+                      fontSize: '0.8rem',
+                      fontWeight: 700,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: '1.5px solid #FFFFFF',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+                      flexShrink: 0,
                     }}
-                    className="account-label"
                   >
-                    Account
-                  </span>
-                  <span
-                    style={{
-                      fontSize: '0.825rem',
-                      fontWeight: 600,
-                      color: isAccountActive ? 'var(--sage-700)' : 'var(--text-main)',
-                      maxWidth: '120px',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                    }}
-                    className="account-user-name"
-                  >
-                    {user?.name || 'My Profile'}
-                  </span>
-                </div>
-              </Link>
+                    {user?.name ? user.name[0].toUpperCase() : <User size={14} />}
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.15 }}>
+                    <span
+                      style={{
+                        fontSize: '0.66rem',
+                        fontWeight: 600,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.04em',
+                        color: isAccountActive ? 'var(--sage-600)' : 'var(--text-faint)',
+                      }}
+                      className="account-label"
+                    >
+                      Account
+                    </span>
+                    <span
+                      style={{
+                        fontSize: '0.825rem',
+                        fontWeight: 600,
+                        color: isAccountActive ? 'var(--sage-700)' : 'var(--text-main)',
+                        maxWidth: '120px',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}
+                      className="account-user-name"
+                    >
+                      {user?.name || 'My Profile'}
+                    </span>
+                  </div>
+                </Link>
 
-              {/* Logout Button */}
-              <button
-                onClick={logout}
-                id="btn-logout"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  padding: '0.45rem 0.85rem',
-                  borderRadius: 'var(--radius-full)',
-                  border: '1px solid var(--border-light)',
-                  backgroundColor: '#FFFFFF',
-                  color: 'var(--text-muted)',
-                  fontSize: '0.825rem',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'all var(--transition-fast)',
-                }}
-                className="btn-logout-custom"
-                title="Logout from AuraSpend"
-              >
-                <LogOut size={14} strokeWidth={2.2} />
-                <span className="logout-text">Logout</span>
-              </button>
+                {/* Logout Button */}
+                <button
+                  onClick={logout}
+                  id="btn-logout"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    padding: '0.45rem 0.85rem',
+                    borderRadius: 'var(--radius-full)',
+                    border: '1px solid var(--border-light)',
+                    backgroundColor: '#FFFFFF',
+                    color: 'var(--text-muted)',
+                    fontSize: '0.825rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    transition: 'all var(--transition-fast)',
+                  }}
+                  className="btn-logout-custom"
+                  title="Logout from SwipeSense"
+                >
+                  <LogOut size={14} strokeWidth={2.2} />
+                  <span className="logout-text">Logout</span>
+                </button>
+              </div>
 
               {/* Mobile Hamburger Toggle Button */}
               <button
@@ -411,6 +420,9 @@ export default function Navbar() {
         .desktop-nav {
           display: none;
         }
+        .desktop-actions {
+          display: none;
+        }
         .mobile-toggle-btn {
           display: flex;
         }
@@ -443,23 +455,14 @@ export default function Navbar() {
           .desktop-nav {
             display: flex !important;
           }
+          .desktop-actions {
+            display: flex !important;
+          }
           .mobile-toggle-btn {
             display: none !important;
           }
-        }
-
-        @media (max-width: 640px) {
-          .account-label {
-            display: none;
-          }
-          .account-user-name {
-            max-width: 80px !important;
-          }
-          .logout-text {
-            display: none;
-          }
-          .btn-logout-custom {
-            padding: 0.45rem !important;
+          .mobile-drawer {
+            display: none !important;
           }
         }
       `}</style>

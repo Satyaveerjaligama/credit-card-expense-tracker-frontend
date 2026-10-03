@@ -82,7 +82,7 @@ export default function LoginPage() {
             <CreditCard size={24} />
           </div>
           <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-main)' }}>
-            Sign in to AuraSpend
+            Sign in to SwipeSense
           </h1>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
             Monitor credit card spending & stay below your personal limits
