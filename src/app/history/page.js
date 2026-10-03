@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../lib/api';
 import PageHeader from '../../components/PageHeader';
+import CustomDropdown from '../../components/CustomDropdown';
 import {
   BarChart3,
   Calendar,
@@ -14,6 +15,24 @@ import {
   ArrowUpRight,
   Shield,
 } from 'lucide-react';
+
+const TIMEFRAME_OPTIONS = [
+  {
+    value: 3,
+    label: 'Last 3 Months',
+    badge: '3M',
+  },
+  {
+    value: 6,
+    label: 'Last 6 Months',
+    badge: '6M',
+  },
+  {
+    value: 12,
+    label: 'Last 12 Months',
+    badge: '1Y',
+  },
+];
 
 export default function HistoryPage() {
   const { user, isAuthenticated } = useAuth();
@@ -83,22 +102,14 @@ export default function HistoryPage() {
         title="Month-wise Spending History"
         description="Analyze past spending cycles and monitor budget compliance against your personal limit"
         actions={
-          <>
-            <span style={{ fontSize: '0.825rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-              Timeframe:
-            </span>
-            <select
-              id="select-history-months"
-              value={monthsCount}
-              onChange={(e) => setMonthsCount(Number(e.target.value))}
-              className="form-select"
-              style={{ width: '140px', padding: '0.45rem 0.75rem', fontSize: '0.85rem' }}
-            >
-              <option value={3}>Last 3 Months</option>
-              <option value={6}>Last 6 Months</option>
-              <option value={12}>Last 12 Months</option>
-            </select>
-          </>
+          <CustomDropdown
+            id="select-history-months"
+            label="Timeframe"
+            icon={Calendar}
+            value={monthsCount}
+            onChange={(val) => setMonthsCount(Number(val))}
+            options={TIMEFRAME_OPTIONS}
+          />
         }
       />
 

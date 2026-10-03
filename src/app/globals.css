@@ -420,3 +420,32 @@ h1, h2, h3, h4, h5, h6 {
 .pulse-warning {
   animation: pulseSubtle 3s infinite ease-in-out;
 }
+
+/* Custom Dropdown Styling & Animations */
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.custom-dropdown-panel {
+  animation: dropdownFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: top right;
+}
+
+.dropdown-trigger:hover {
+  background-color: var(--sage-50) !important;
+  border-color: var(--sage-300) !important;
+  box-shadow: 0 2px 8px rgba(87, 142, 108, 0.12) !important;
+}
+
+.dropdown-option:hover:not(.active) {
+  background-color: var(--sage-50) !important;
+  border-color: var(--sage-200) !important;
+}
+
