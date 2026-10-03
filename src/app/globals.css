@@ -391,6 +391,26 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--bg-card-hover);
 }
 
+.btn-table-delete {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text-faint);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.5rem;
+  transition: all var(--transition-fast);
+}
+
+.btn-table-delete:hover {
+  background-color: var(--rose-50);
+  border-color: var(--rose-200);
+  color: var(--rose-600);
+  transform: scale(1.08);
+}
+
 /* Micro-animations */
 @keyframes pulseSubtle {
   0%, 100% { opacity: 1; transform: scale(1); }

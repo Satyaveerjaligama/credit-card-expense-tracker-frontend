@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
 import AddTransactionModal from '../components/AddTransactionModal';
 import TrackingGuideModal from '../components/TrackingGuideModal';
+import DeleteConfirmationModal from '../components/DeleteConfirmationModal';
 import {
   CreditCard,
   Target,
@@ -66,6 +67,8 @@ export default function DashboardPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
   const [bannerAlert, setBannerAlert] = useState(null);
+  const [transactionToDelete, setTransactionToDelete] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const fetchDashboardData = useCallback(async () => {
     try {
@@ -102,13 +105,17 @@ export default function DashboardPage() {
     }
   }, [isAuthenticated, fetchDashboardData]);
 
-  const handleDeleteTransaction = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this expense?')) return;
+  const handleConfirmDelete = async () => {
+    if (!transactionToDelete) return;
     try {
-      await api.deleteTransaction(id);
+      setDeleteLoading(true);
+      await api.deleteTransaction(transactionToDelete._id);
+      setTransactionToDelete(null);
       fetchDashboardData();
     } catch (err) {
       alert(err.message || 'Failed to delete transaction');
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -675,15 +682,11 @@ export default function DashboardPage() {
                       </td>
                       <td style={{ textAlign: 'center' }}>
                         <button
-                          onClick={() => handleDeleteTransaction(txn._id)}
-                          className="btn btn-secondary btn-sm"
-                          style={{
-                            padding: '0.3rem',
-                            border: 'none',
-                            color: 'var(--text-faint)',
-                            cursor: 'pointer',
-                          }}
+                          onClick={() => setTransactionToDelete(txn)}
+                          className="btn-table-delete"
                           title="Delete expense"
+                          aria-label={`Delete expense from ${txn.merchant}`}
+                          id={`btn-delete-txn-${txn._id}`}
                         >
                           <Trash2 size={15} />
                         </button>
@@ -741,6 +744,16 @@ export default function DashboardPage() {
 
       {/* Tracking Options Guide Modal */}
       <TrackingGuideModal isOpen={isGuideModalOpen} onClose={() => setIsGuideModalOpen(false)} />
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        isOpen={Boolean(transactionToDelete)}
+        onClose={() => !deleteLoading && setTransactionToDelete(null)}
+        onConfirm={handleConfirmDelete}
+        transaction={transactionToDelete}
+        loading={deleteLoading}
+        currencySymbol={currency}
+      />
     </div>
   );
 }
