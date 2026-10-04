@@ -7,10 +7,7 @@ import PageHeader from '../../components/PageHeader';
 import CustomDropdown from '../../components/CustomDropdown';
 import {
   SlidersHorizontal,
-  CreditCard,
-  Target,
   BellRing,
-  Calendar,
   Save,
   CheckCircle2,
   AlertTriangle,
@@ -27,7 +24,7 @@ const CURRENCY_OPTIONS = [
 ];
 
 export default function LimitsPage() {
-  const { user, isAuthenticated, refreshUser } = useAuth();
+  const { isAuthenticated, refreshUser } = useAuth();
 
   const [cardLimit, setCardLimit] = useState(100000);
   const [personalLimit, setPersonalLimit] = useState(10000);
