@@ -38,7 +38,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 | **Icons** | `lucide-react` (v1.50.0) | Standard SVG icon set throughout the app |
 | **State & Auth** | React Context (`AuthContext`) | Synchronized with `localStorage` (`cc_token`, `cc_user`) |
 | **HTTP Client** | Universal `fetch` wrapper | Implemented in `src/lib/api.js` with Bearer token injection |
-| **Dev Port** | `http://localhost:3000` | Run via `npm run dev` |
+| **Dev Port & Base Path** | `http://localhost:3000/swipesense` | Configured via `basePath` in `next.config.mjs` (defaults to `/swipesense`, overridable via `process.env.NEXT_PUBLIC_BASE_PATH`) |
 | **Backend Target** | `http://localhost:5000/api` | Configured via `process.env.NEXT_PUBLIC_API_URL` |
 
 ---

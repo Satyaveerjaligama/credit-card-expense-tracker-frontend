@@ -14,7 +14,7 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000/swipesense](http://localhost:3000/swipesense) with your browser to see the result (root requests to `/` will also automatically redirect to `/swipesense`).
 
 You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 
