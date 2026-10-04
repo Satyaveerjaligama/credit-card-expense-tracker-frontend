@@ -285,6 +285,26 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--text-muted);
 }
 
+.form-input.has-error, .form-select.has-error, .form-textarea.has-error {
+  border-color: var(--rose-400);
+  background-color: var(--rose-50);
+}
+
+.form-input.has-error:focus, .form-select.has-error:focus, .form-textarea.has-error:focus {
+  border-color: var(--rose-500);
+  box-shadow: 0 0 0 3px rgba(183, 78, 73, 0.18);
+}
+
+.form-error-msg {
+  font-size: 0.785rem;
+  color: var(--rose-600);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+}
+
 /* Pastel Progress Bar */
 .progress-container {
   width: 100%;

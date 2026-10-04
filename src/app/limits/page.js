@@ -11,6 +11,7 @@ import {
   Save,
   CheckCircle2,
   AlertTriangle,
+  AlertCircle,
   Sparkles,
   Coins,
 } from 'lucide-react';
@@ -39,19 +40,24 @@ export default function LimitsPage() {
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      loadLimits();
+  const clearFieldError = (field) => {
+    if (fieldErrors[field]) {
+      setFieldErrors((prev) => {
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
     }
-  }, [isAuthenticated]);
+  };
 
   const loadLimits = async () => {
     try {
       const res = await api.getLimitsOverview();
       if (res.success && res.data) {
-        setCardLimit(res.data.cardLimit);
-        setPersonalLimit(res.data.personalLimit);
+        setCardLimit(res.data.cardLimit ?? 100000);
+        setPersonalLimit(res.data.personalLimit ?? 10000);
         setAlertThreshold(res.data.alertThreshold || 80);
         setBillingCycleDay(res.data.billingCycleDay || 1);
         setCurrencySymbol(res.data.currencySymbol || '₹');
@@ -63,12 +69,68 @@ export default function LimitsPage() {
     }
   };
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadLimits();
+    }
+  }, [isAuthenticated]);
+
   const handleSaveLimits = async (e) => {
     e.preventDefault();
+    setErrorMsg('');
+    setSuccessMsg('');
+
+    const errors = {};
+
+    // Validate Card Limit
+    const trimmedCard = String(cardLimit ?? '').trim();
+    if (!trimmedCard) {
+      errors.cardLimit = 'Credit card limit is required.';
+    } else {
+      const numCard = Number(trimmedCard);
+      if (isNaN(numCard) || numCard <= 0) {
+        errors.cardLimit = 'Please enter a valid credit card limit greater than 0.';
+      }
+    }
+
+    // Validate Personal Limit
+    const trimmedPersonal = String(personalLimit ?? '').trim();
+    if (!trimmedPersonal) {
+      errors.personalLimit = 'Personal spending limit is required.';
+    } else {
+      const numPersonal = Number(trimmedPersonal);
+      if (isNaN(numPersonal) || numPersonal <= 0) {
+        errors.personalLimit = 'Please enter a valid personal limit greater than 0.';
+      } else if (!errors.cardLimit && numPersonal > Number(trimmedCard)) {
+        errors.personalLimit = 'Personal spending limit cannot exceed the total credit card limit.';
+      }
+    }
+
+    // Validate Billing Cycle Day
+    const trimmedDay = String(billingCycleDay ?? '').trim();
+    if (!trimmedDay) {
+      errors.billingCycleDay = 'Billing cycle start day is required.';
+    } else {
+      const numDay = Number(trimmedDay);
+      if (isNaN(numDay) || !Number.isInteger(numDay) || numDay < 1 || numDay > 28) {
+        errors.billingCycleDay = 'Billing cycle day must be an integer between 1 and 28.';
+      }
+    }
+
+    // Validate Card Name
+    if (!cardName || !String(cardName).trim()) {
+      errors.cardName = 'Credit card name/label is required.';
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      return;
+    }
+
+    setFieldErrors({});
+
     try {
       setLoading(true);
-      setErrorMsg('');
-      setSuccessMsg('');
 
       const res = await api.updateLimits({
         cardLimit: Number(cardLimit),
@@ -76,7 +138,7 @@ export default function LimitsPage() {
         alertThreshold: Number(alertThreshold),
         billingCycleDay: Number(billingCycleDay),
         currencySymbol,
-        cardName,
+        cardName: String(cardName).trim(),
       });
 
       if (res.success) {
@@ -91,12 +153,14 @@ export default function LimitsPage() {
   };
 
   // Calculations for live preview
-  const thresholdAmount = (personalLimit * alertThreshold) / 100;
-  const simPercent = personalLimit > 0 ? (simulatedSpend / personalLimit) * 100 : 0;
-  const simRemaining = Math.max(0, personalLimit - simulatedSpend);
+  const numPersonalLimit = Number(personalLimit) || 0;
+  const numCardLimit = Number(cardLimit) || 0;
+  const thresholdAmount = (numPersonalLimit * alertThreshold) / 100;
+  const simPercent = numPersonalLimit > 0 ? (simulatedSpend / numPersonalLimit) * 100 : 0;
+  const simRemaining = Math.max(0, numPersonalLimit - simulatedSpend);
 
   let simStatus = 'SAFE';
-  if (simulatedSpend > personalLimit) {
+  if (simulatedSpend > numPersonalLimit) {
     simStatus = 'EXCEEDED';
   } else if (simPercent >= alertThreshold) {
     simStatus = 'WARNING';
@@ -160,7 +224,7 @@ export default function LimitsPage() {
             Limits & Alert Settings
           </h2>
 
-          <form onSubmit={handleSaveLimits}>
+          <form onSubmit={handleSaveLimits} noValidate>
             {/* Card Limit */}
             <div className="form-group">
               <label className="form-label" htmlFor="input-card-limit">
@@ -170,15 +234,23 @@ export default function LimitsPage() {
                 <input
                   type="number"
                   id="input-card-limit"
-                  required
                   min="1"
-                  step="1000"
+                  step="any"
                   value={cardLimit}
-                  onChange={(e) => setCardLimit(Number(e.target.value))}
-                  className="form-input"
-                  placeholder="e.g. 100000"
+                  onChange={(e) => {
+                    setCardLimit(e.target.value);
+                    clearFieldError('cardLimit');
+                  }}
+                  className={`form-input ${fieldErrors.cardLimit ? 'has-error' : ''}`}
+                  placeholder="e.g. 617000"
                 />
               </div>
+              {fieldErrors.cardLimit && (
+                <div className="form-error-msg" id="error-card-limit">
+                  <AlertCircle size={14} />
+                  <span>{fieldErrors.cardLimit}</span>
+                </div>
+              )}
               <span className="form-hint">
                 The total credit line sanctioned by your bank.
               </span>
@@ -192,14 +264,22 @@ export default function LimitsPage() {
               <input
                 type="number"
                 id="input-personal-limit"
-                required
                 min="1"
-                step="500"
+                step="any"
                 value={personalLimit}
-                onChange={(e) => setPersonalLimit(Number(e.target.value))}
-                className="form-input"
+                onChange={(e) => {
+                  setPersonalLimit(e.target.value);
+                  clearFieldError('personalLimit');
+                }}
+                className={`form-input ${fieldErrors.personalLimit ? 'has-error' : ''}`}
                 placeholder="e.g. 10000"
               />
+              {fieldErrors.personalLimit && (
+                <div className="form-error-msg" id="error-personal-limit">
+                  <AlertCircle size={14} />
+                  <span>{fieldErrors.personalLimit}</span>
+                </div>
+              )}
               <span className="form-hint">
                 Your monthly target budget cap that you do not want to exceed.
               </span>
@@ -244,10 +324,20 @@ export default function LimitsPage() {
                   id="input-billing-day"
                   min="1"
                   max="28"
+                  step="1"
                   value={billingCycleDay}
-                  onChange={(e) => setBillingCycleDay(Number(e.target.value))}
-                  className="form-input"
+                  onChange={(e) => {
+                    setBillingCycleDay(e.target.value);
+                    clearFieldError('billingCycleDay');
+                  }}
+                  className={`form-input ${fieldErrors.billingCycleDay ? 'has-error' : ''}`}
                 />
+                {fieldErrors.billingCycleDay && (
+                  <div className="form-error-msg" id="error-billing-day">
+                    <AlertCircle size={14} />
+                    <span>{fieldErrors.billingCycleDay}</span>
+                  </div>
+                )}
                 <span className="form-hint">Day of month (1 to 28)</span>
               </div>
 
@@ -276,10 +366,19 @@ export default function LimitsPage() {
                 type="text"
                 id="input-card-name"
                 value={cardName}
-                onChange={(e) => setCardName(e.target.value)}
-                className="form-input"
+                onChange={(e) => {
+                  setCardName(e.target.value);
+                  clearFieldError('cardName');
+                }}
+                className={`form-input ${fieldErrors.cardName ? 'has-error' : ''}`}
                 placeholder="e.g. HDFC Regalia Gold, ICICI Coral"
               />
+              {fieldErrors.cardName && (
+                <div className="form-error-msg" id="error-card-name">
+                  <AlertCircle size={14} />
+                  <span>{fieldErrors.cardName}</span>
+                </div>
+              )}
             </div>
 
             <div style={{ marginTop: '1.5rem' }}>
@@ -331,7 +430,7 @@ export default function LimitsPage() {
             <input
               type="range"
               min="0"
-              max={personalLimit * 1.5}
+              max={Math.max(1000, Math.round(numPersonalLimit * 1.5))}
               step="250"
               value={simulatedSpend}
               onChange={(e) => setSimulatedSpend(Number(e.target.value))}
@@ -341,7 +440,7 @@ export default function LimitsPage() {
             <div style={{ display: 'flex', gap: '0.35rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
               <button
                 type="button"
-                onClick={() => setSimulatedSpend(Math.round(personalLimit * 0.5))}
+                onClick={() => setSimulatedSpend(Math.round(numPersonalLimit * 0.5))}
                 className="btn btn-secondary btn-sm"
                 style={{ fontSize: '0.7rem' }}
               >
@@ -349,7 +448,7 @@ export default function LimitsPage() {
               </button>
               <button
                 type="button"
-                onClick={() => setSimulatedSpend(Math.round((personalLimit * alertThreshold) / 100 + 400))}
+                onClick={() => setSimulatedSpend(Math.round((numPersonalLimit * alertThreshold) / 100 + 400))}
                 className="btn btn-secondary btn-sm"
                 style={{ fontSize: '0.7rem' }}
               >
@@ -357,7 +456,7 @@ export default function LimitsPage() {
               </button>
               <button
                 type="button"
-                onClick={() => setSimulatedSpend(Math.round(personalLimit + 1200))}
+                onClick={() => setSimulatedSpend(Math.round(numPersonalLimit + 1200))}
                 className="btn btn-secondary btn-sm"
                 style={{ fontSize: '0.7rem' }}
               >
@@ -427,10 +526,10 @@ export default function LimitsPage() {
               }}
             >
               {simStatus === 'EXCEEDED'
-                ? `You have spent ${currencySymbol}${simulatedSpend.toLocaleString()} which exceeds your budget of ${currencySymbol}${personalLimit.toLocaleString()} by ${currencySymbol}${(simulatedSpend - personalLimit).toLocaleString()}!`
+                ? `You have spent ${currencySymbol}${simulatedSpend.toLocaleString()} which exceeds your budget of ${currencySymbol}${numPersonalLimit.toLocaleString()} by ${currencySymbol}${(simulatedSpend - numPersonalLimit).toLocaleString()}!`
                 : simStatus === 'WARNING'
                 ? `Caution: You have utilized ${simPercent.toFixed(1)}% of your personal limit. Remaining budget: ${currencySymbol}${simRemaining.toLocaleString()}.`
-                : `You have spent ${currencySymbol}${simulatedSpend.toLocaleString()} out of ${currencySymbol}${personalLimit.toLocaleString()} (${simPercent.toFixed(1)}%). Remaining: ${currencySymbol}${simRemaining.toLocaleString()}.`}
+                : `You have spent ${currencySymbol}${simulatedSpend.toLocaleString()} out of ${currencySymbol}${numPersonalLimit.toLocaleString()} (${simPercent.toFixed(1)}%). Remaining: ${currencySymbol}${simRemaining.toLocaleString()}.`}
             </p>
           </div>
 
