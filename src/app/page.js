@@ -7,6 +7,7 @@ import { api } from '../lib/api';
 import AddTransactionModal from '../components/AddTransactionModal';
 import TrackingGuideModal from '../components/TrackingGuideModal';
 import DeleteConfirmationModal from '../components/DeleteConfirmationModal';
+import { formatIndianNumber } from '../lib/formatters';
 import {
   CreditCard,
   Target,
@@ -33,6 +34,8 @@ import {
   Tv,
   Fuel,
   MoreHorizontal,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 
 const CATEGORY_ICONS = {
@@ -56,6 +59,7 @@ export default function DashboardPage() {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [showCardLimit, setShowCardLimit] = useState(false);
 
   // Filters
   const [search, setSearch] = useState('');
@@ -288,7 +292,7 @@ export default function DashboardPage() {
               >
                 {overview?.warningMessage ||
                   bannerAlert?.message ||
-                  `You have utilized ${personalPercent.toFixed(1)}% of your monthly budget. Spent ${currency}${totalSpent.toLocaleString()} of ${currency}${personalLimit.toLocaleString()}. Only ${currency}${Number(remainingPersonal).toLocaleString()} remaining!`}
+                  `You have utilized ${personalPercent.toFixed(1)}% of your monthly budget. Spent ${currency}${formatIndianNumber(totalSpent)} of ${currency}${formatIndianNumber(personalLimit)}. Only ${currency}${formatIndianNumber(remainingPersonal)} remaining!`}
               </p>
             </div>
           </div>
@@ -344,16 +348,62 @@ export default function DashboardPage() {
             <span className="badge badge-slate">{user?.cardName || 'Primary Card'}</span>
           </div>
 
-          <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
-            {currency}
-            {cardLimit.toLocaleString()}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '0.35rem',
+            }}
+          >
+            <div
+              style={{
+                fontSize: '1.75rem',
+                fontWeight: 800,
+                color: 'var(--text-main)',
+                letterSpacing: showCardLimit ? 'normal' : '2px',
+                fontFamily: showCardLimit ? 'inherit' : 'var(--font-mono)',
+              }}
+            >
+              {showCardLimit ? `${currency}${formatIndianNumber(cardLimit)}` : '••••••••'}
+            </div>
+            <button
+              type="button"
+              id="btn-toggle-card-limit"
+              onClick={() => setShowCardLimit((prev) => !prev)}
+              aria-label={showCardLimit ? 'Hide credit limit' : 'Show credit limit'}
+              title={showCardLimit ? 'Hide credit limit' : 'Show credit limit'}
+              style={{
+                background: '#FFFFFF',
+                border: '1px solid #D7E2F0',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '32px',
+                height: '32px',
+                borderRadius: '8px',
+                color: 'var(--slate-blue-700)',
+                boxShadow: 'var(--shadow-sm)',
+                transition: 'all var(--transition-fast)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--slate-blue-100)';
+                e.currentTarget.style.borderColor = 'var(--slate-blue-500)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#FFFFFF';
+                e.currentTarget.style.borderColor = '#D7E2F0';
+              }}
+            >
+              {showCardLimit ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
           </div>
 
-          <div style={{ fontSize: '0.825rem', color: 'var(--slate-blue-700)', display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ fontSize: '0.825rem', color: 'var(--slate-blue-700)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span>Available Bank Credit:</span>
-            <strong style={{ color: 'var(--text-main)' }}>
-              {currency}
-              {remainingCard.toLocaleString()}
+            <strong style={{ color: 'var(--text-main)', letterSpacing: showCardLimit ? 'normal' : '1px' }}>
+              {showCardLimit ? `${currency}${formatIndianNumber(remainingCard)}` : '••••••••'}
             </strong>
           </div>
 
@@ -399,7 +449,7 @@ export default function DashboardPage() {
 
           <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
             {currency}
-            {personalLimit.toLocaleString()}
+            {formatIndianNumber(personalLimit)}
           </div>
 
           <div style={{ fontSize: '0.825rem', color: 'var(--sage-700)', display: 'flex', justifyContent: 'space-between' }}>
@@ -411,7 +461,7 @@ export default function DashboardPage() {
               }}
             >
               {currency}
-              {remainingPersonal.toLocaleString()}
+              {formatIndianNumber(remainingPersonal)}
             </strong>
           </div>
 
@@ -471,14 +521,14 @@ export default function DashboardPage() {
 
           <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
             {currency}
-            {totalSpent.toLocaleString()}
+            {formatIndianNumber(totalSpent)}
           </div>
 
           <div style={{ fontSize: '0.825rem', color: 'var(--text-muted)', display: 'flex', justifyContent: 'space-between' }}>
             <span>Warning threshold:</span>
             <span>
               {overview?.alertThreshold || 80}% ({currency}
-              {(((personalLimit * (overview?.alertThreshold || 80)) / 100)).toLocaleString()})
+              {formatIndianNumber(((personalLimit * (overview?.alertThreshold || 80)) / 100))})
             </span>
           </div>
 
@@ -678,7 +728,7 @@ export default function DashboardPage() {
                       </td>
                       <td style={{ textAlign: 'right', fontWeight: 700, fontSize: '0.95rem' }}>
                         {currency}
-                        {txn.amount.toLocaleString()}
+                        {formatIndianNumber(txn.amount)}
                       </td>
                       <td style={{ textAlign: 'center' }}>
                         <button

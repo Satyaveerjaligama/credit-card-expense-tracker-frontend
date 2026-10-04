@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { api } from '../lib/api';
+import { formatIndianNumber } from '../lib/formatters';
 import {
   X,
   PlusCircle,
@@ -494,7 +495,7 @@ export default function AddTransactionModal({ isOpen, onClose, onSuccess, curren
                     <span style={{ color: 'var(--text-muted)' }}>Amount:</span>{' '}
                     <strong style={{ fontSize: '1rem', color: 'var(--text-main)' }}>
                       {currencySymbol}
-                      {parsedData.amount?.toLocaleString()}
+                      {formatIndianNumber(parsedData.amount)}
                     </strong>
                   </div>
                   <div>

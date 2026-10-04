@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { api } from '../../lib/api';
 import PageHeader from '../../components/PageHeader';
 import CustomDropdown from '../../components/CustomDropdown';
+import { formatIndianNumber } from '../../lib/formatters';
 import {
   SlidersHorizontal,
   BellRing,
@@ -242,7 +243,7 @@ export default function LimitsPage() {
                     clearFieldError('cardLimit');
                   }}
                   className={`form-input ${fieldErrors.cardLimit ? 'has-error' : ''}`}
-                  placeholder="e.g. 617000"
+                  placeholder="e.g. 100000"
                 />
               </div>
               {fieldErrors.cardLimit && (
@@ -293,7 +294,7 @@ export default function LimitsPage() {
                 </label>
                 <span className="badge badge-amber" style={{ fontSize: '0.8rem' }}>
                   {alertThreshold}% ({currencySymbol}
-                  {Math.round(thresholdAmount).toLocaleString()})
+                  {formatIndianNumber(Math.round(thresholdAmount))})
                 </span>
               </div>
               <input
@@ -309,7 +310,7 @@ export default function LimitsPage() {
               <span className="form-hint">
                 You will receive a warning banner when your spending reaches {alertThreshold}% (
                 {currencySymbol}
-                {Math.round(thresholdAmount).toLocaleString()}) of your personal limit.
+                {formatIndianNumber(Math.round(thresholdAmount))}) of your personal limit.
               </span>
             </div>
 
@@ -423,7 +424,7 @@ export default function LimitsPage() {
               <span style={{ fontSize: '0.825rem', fontWeight: 600 }}>Simulate Spent Amount:</span>
               <strong style={{ fontSize: '1rem', color: 'var(--text-main)' }}>
                 {currencySymbol}
-                {simulatedSpend.toLocaleString()}
+                {formatIndianNumber(simulatedSpend)}
               </strong>
             </div>
 
@@ -526,10 +527,10 @@ export default function LimitsPage() {
               }}
             >
               {simStatus === 'EXCEEDED'
-                ? `You have spent ${currencySymbol}${simulatedSpend.toLocaleString()} which exceeds your budget of ${currencySymbol}${numPersonalLimit.toLocaleString()} by ${currencySymbol}${(simulatedSpend - numPersonalLimit).toLocaleString()}!`
+                ? `You have spent ${currencySymbol}${formatIndianNumber(simulatedSpend)} which exceeds your budget of ${currencySymbol}${formatIndianNumber(numPersonalLimit)} by ${currencySymbol}${formatIndianNumber(simulatedSpend - numPersonalLimit)}!`
                 : simStatus === 'WARNING'
-                ? `Caution: You have utilized ${simPercent.toFixed(1)}% of your personal limit. Remaining budget: ${currencySymbol}${simRemaining.toLocaleString()}.`
-                : `You have spent ${currencySymbol}${simulatedSpend.toLocaleString()} out of ${currencySymbol}${numPersonalLimit.toLocaleString()} (${simPercent.toFixed(1)}%). Remaining: ${currencySymbol}${simRemaining.toLocaleString()}.`}
+                ? `Caution: You have utilized ${simPercent.toFixed(1)}% of your personal limit. Remaining budget: ${currencySymbol}${formatIndianNumber(simRemaining)}.`
+                : `You have spent ${currencySymbol}${formatIndianNumber(simulatedSpend)} out of ${currencySymbol}${formatIndianNumber(numPersonalLimit)} (${simPercent.toFixed(1)}%). Remaining: ${currencySymbol}${formatIndianNumber(simRemaining)}.`}
             </p>
           </div>
 

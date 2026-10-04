@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { api } from '../../lib/api';
 import PageHeader from '../../components/PageHeader';
 import CustomDropdown from '../../components/CustomDropdown';
+import { formatIndianNumber } from '../../lib/formatters';
 import {
   BarChart3,
   Calendar,
@@ -129,7 +130,7 @@ export default function HistoryPage() {
           </span>
           <div style={{ fontSize: '1.5rem', fontWeight: 800, marginTop: '0.25rem' }}>
             {currency}
-            {(summary?.avgMonthly || 0).toLocaleString()}
+            {formatIndianNumber(summary?.avgMonthly || 0)}
           </div>
           <span style={{ fontSize: '0.75rem', color: 'var(--text-faint)' }}>
             Over {monthsCount} months
@@ -145,7 +146,7 @@ export default function HistoryPage() {
           </div>
           <span style={{ fontSize: '0.75rem', color: 'var(--rose-600)', fontWeight: 600 }}>
             {currency}
-            {(summary?.peakAmount || 0).toLocaleString()} spent
+            {formatIndianNumber(summary?.peakAmount || 0)} spent
           </span>
         </div>
 
@@ -155,7 +156,7 @@ export default function HistoryPage() {
           </span>
           <div style={{ fontSize: '1.5rem', fontWeight: 800, marginTop: '0.25rem', color: 'var(--sage-700)' }}>
             {currency}
-            {personalLimit.toLocaleString()}
+            {formatIndianNumber(personalLimit)}
           </div>
           <span style={{ fontSize: '0.75rem', color: 'var(--sage-600)' }}>
             Threshold reference line
@@ -168,7 +169,7 @@ export default function HistoryPage() {
           </span>
           <div style={{ fontSize: '1.5rem', fontWeight: 800, marginTop: '0.25rem' }}>
             {currency}
-            {(summary?.totalSpentPeriod || 0).toLocaleString()}
+            {formatIndianNumber(summary?.totalSpentPeriod || 0)}
           </div>
           <span style={{ fontSize: '0.75rem', color: 'var(--text-faint)' }}>
             Total credit debits recorded
@@ -191,7 +192,7 @@ export default function HistoryPage() {
           <div>
             <h2 style={{ fontSize: '1.2rem', fontWeight: 700 }}>Monthly Expense Graph</h2>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-              Red bars indicate months where spending crossed your {currency}{personalLimit.toLocaleString()} limit
+              Red bars indicate months where spending crossed your {currency}{formatIndianNumber(personalLimit)} limit
             </p>
           </div>
 
@@ -207,7 +208,7 @@ export default function HistoryPage() {
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
               <div style={{ width: '16px', height: '2px', backgroundColor: 'var(--amber-500)', borderStyle: 'dashed' }} />
-              <span>Limit Cap ({currency}{personalLimit.toLocaleString()})</span>
+              <span>Limit Cap ({currency}{formatIndianNumber(personalLimit)})</span>
             </div>
           </div>
         </div>
@@ -358,13 +359,13 @@ export default function HistoryPage() {
           >
             <div>
               <strong>{activeTooltip.fullLabel}:</strong> Spent {currency}
-              {activeTooltip.totalSpent.toLocaleString()} across {activeTooltip.transactionCount} expenses
+              {formatIndianNumber(activeTooltip.totalSpent)} across {activeTooltip.transactionCount} expenses
             </div>
             <div>
               {activeTooltip.totalSpent > personalLimit ? (
                 <span className="badge badge-rose">
                   Exceeded Limit by {currency}
-                  {(activeTooltip.totalSpent - personalLimit).toLocaleString()}
+                  {formatIndianNumber(activeTooltip.totalSpent - personalLimit)}
                 </span>
               ) : (
                 <span className="badge badge-sage">
@@ -398,13 +399,13 @@ export default function HistoryPage() {
                     <td style={{ fontWeight: 600 }}>{item.fullLabel}</td>
                     <td>
                       {currency}
-                      {item.totalSpent.toLocaleString()}
+                      {formatIndianNumber(item.totalSpent)}
                     </td>
                     <td>
                       {item.isOverLimit ? (
                         <span className="badge badge-rose" style={{ fontSize: '0.72rem' }}>
                           <AlertTriangle size={11} /> Over by {currency}
-                          {(item.totalSpent - personalLimit).toLocaleString()}
+                          {formatIndianNumber(item.totalSpent - personalLimit)}
                         </span>
                       ) : (
                         <span className="badge badge-sage" style={{ fontSize: '0.72rem' }}>
@@ -444,7 +445,7 @@ export default function HistoryPage() {
                     <span style={{ fontWeight: 600 }}>{cat.category}</span>
                     <span style={{ color: 'var(--text-muted)' }}>
                       {currency}
-                      {cat.totalSpent.toLocaleString()} ({cat.percentage}%)
+                      {formatIndianNumber(cat.totalSpent)} ({cat.percentage}%)
                     </span>
                   </div>
                   <div className="progress-container" style={{ height: '7px' }}>

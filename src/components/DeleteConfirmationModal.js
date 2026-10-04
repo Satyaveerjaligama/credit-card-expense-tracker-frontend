@@ -12,6 +12,7 @@ import {
   ArrowRight,
   MessageSquare,
 } from 'lucide-react';
+import { formatIndianNumber } from '../lib/formatters';
 
 /**
  * DeleteConfirmationModal component
@@ -197,7 +198,7 @@ export default function DeleteConfirmationModal({
                 }}
               >
                 -{currencySymbol}
-                {Number(transaction.amount || 0).toLocaleString()}
+                {formatIndianNumber(transaction.amount)}
               </div>
               {transaction.source === 'sms_sync' ? (
                 <span
@@ -263,7 +264,7 @@ export default function DeleteConfirmationModal({
           >
             <CreditCard size={13} style={{ flexShrink: 0 }} />
             <span>
-              Deleting this expense will restore <strong>{currencySymbol}{Number(transaction.amount || 0).toLocaleString()}</strong> to your available limit.
+              Deleting this expense will restore <strong>{currencySymbol}{formatIndianNumber(transaction.amount)}</strong> to your available limit.
             </span>
           </div>
         </div>
