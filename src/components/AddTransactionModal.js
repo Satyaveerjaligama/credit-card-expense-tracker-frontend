@@ -152,8 +152,8 @@ export default function AddTransactionModal({ isOpen, onClose, onSuccess, curren
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div
-        className="modal-content"
-        style={{ padding: '1.75rem', maxWidth: '540px' }}
+        className="modal-content modal-content-responsive"
+        style={{ maxWidth: '540px' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -282,8 +282,8 @@ export default function AddTransactionModal({ isOpen, onClose, onSuccess, curren
         {/* Tab 1: Manual Entry Form */}
         {activeTab === 'manual' && (
           <form onSubmit={handleManualSubmit}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <div className="form-group">
+            <div className="modal-form-grid">
+              <div className="form-group" style={{ marginBottom: 0 }}>
                 <label className="form-label" htmlFor="expense-amount">
                   Amount ({currencySymbol}) *
                 </label>
@@ -300,7 +300,7 @@ export default function AddTransactionModal({ isOpen, onClose, onSuccess, curren
                 />
               </div>
 
-              <div className="form-group">
+              <div className="form-group" style={{ marginBottom: 0 }}>
                 <label className="form-label" htmlFor="expense-merchant">
                   Merchant / Payee *
                 </label>
@@ -316,8 +316,8 @@ export default function AddTransactionModal({ isOpen, onClose, onSuccess, curren
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <div className="form-group">
+            <div className="modal-form-grid">
+              <div className="form-group" style={{ marginBottom: 0 }}>
                 <label className="form-label" htmlFor="expense-category">
                   Category
                 </label>
@@ -335,7 +335,7 @@ export default function AddTransactionModal({ isOpen, onClose, onSuccess, curren
                 </select>
               </div>
 
-              <div className="form-group">
+              <div className="form-group" style={{ marginBottom: 0 }}>
                 <label className="form-label" htmlFor="expense-date">
                   Date
                 </label>
@@ -349,9 +349,9 @@ export default function AddTransactionModal({ isOpen, onClose, onSuccess, curren
               </div>
             </div>
 
-            <div className="form-group">
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <label className="form-label" htmlFor="expense-notes">
+            <div className="form-group" style={{ marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.25rem' }}>
+                <label className="form-label" htmlFor="expense-notes" style={{ marginBottom: 0 }}>
                   Private Note / Memo
                 </label>
                 <span
@@ -378,7 +378,7 @@ export default function AddTransactionModal({ isOpen, onClose, onSuccess, curren
               />
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1.25rem' }}>
+            <div className="modal-footer-actions">
               <button type="button" onClick={onClose} className="btn btn-secondary">
                 Cancel
               </button>

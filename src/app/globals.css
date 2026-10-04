@@ -360,6 +360,61 @@ h1, h2, h3, h4, h5, h6 {
   animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Responsive Modal Utilities */
+.modal-content-responsive {
+  padding: 1.75rem;
+}
+
+.modal-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.modal-footer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  border-top: 1px solid var(--border-light);
+  padding-top: 1.25rem;
+}
+
+@media (max-width: 600px) {
+  .modal-overlay {
+    padding: 0.65rem !important;
+  }
+
+  .modal-content {
+    max-height: 94vh !important;
+  }
+
+  .modal-content-responsive {
+    padding: 1.15rem 0.95rem !important;
+    border-radius: var(--radius-md) !important;
+  }
+
+  .modal-form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.85rem !important;
+    margin-bottom: 0.85rem !important;
+  }
+
+  .modal-footer-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.65rem !important;
+    padding-top: 1rem !important;
+  }
+
+  .modal-footer-actions .btn {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 0.7rem 1rem !important;
+  }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -412,6 +467,26 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--bg-card-hover);
 }
 
+.btn-table-edit {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text-faint);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.5rem;
+  transition: all var(--transition-fast);
+}
+
+.btn-table-edit:hover {
+  background-color: var(--sage-100);
+  border-color: var(--sage-300);
+  color: var(--sage-700);
+  transform: scale(1.08);
+}
+
 .btn-table-delete {
   background: transparent;
   border: 1px solid transparent;
@@ -457,6 +532,8 @@ h1, h2, h3, h4, h5, h6 {
 .custom-dropdown-panel {
   animation: dropdownFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   transform-origin: top right;
+  max-height: 240px;
+  overflow-y: auto;
 }
 
 .dropdown-trigger:hover {

@@ -5,6 +5,7 @@ import NextLink from 'next/link';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
 import AddTransactionModal from '../components/AddTransactionModal';
+import EditTransactionModal from '../components/EditTransactionModal';
 import TrackingGuideModal from '../components/TrackingGuideModal';
 import DeleteConfirmationModal from '../components/DeleteConfirmationModal';
 import { formatIndianNumber } from '../lib/formatters';
@@ -20,6 +21,7 @@ import {
   Search,
   Filter,
   Trash2,
+  Pencil,
   Lock,
   ArrowRight,
   RefreshCw,
@@ -69,6 +71,7 @@ export default function DashboardPage() {
 
   // Modals
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [transactionToEdit, setTransactionToEdit] = useState(null);
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
   const [bannerAlert, setBannerAlert] = useState(null);
   const [transactionToDelete, setTransactionToDelete] = useState(null);
@@ -128,6 +131,10 @@ export default function DashboardPage() {
     if (warningAlert) {
       setBannerAlert(warningAlert);
     }
+  };
+
+  const handleTransactionUpdated = () => {
+    fetchDashboardData();
   };
 
   if (authLoading) {
@@ -202,16 +209,6 @@ export default function DashboardPage() {
           >
             <HelpCircle size={15} color="var(--sage-600)" />
             <span>Tracking Options</span>
-          </button>
-
-          <button
-            onClick={() => setIsAddModalOpen(true)}
-            id="btn-quick-sms-parse"
-            className="btn btn-secondary btn-sm"
-            style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}
-          >
-            <MessageSquare size={15} color="var(--lavender-500)" />
-            <span>Parse Bank SMS</span>
           </button>
 
           <button
@@ -632,7 +629,7 @@ export default function DashboardPage() {
                 <th>Source</th>
                 <th>Encrypted Notes</th>
                 <th style={{ textAlign: 'right' }}>Amount</th>
-                <th style={{ textAlign: 'center' }}>Action</th>
+                <th style={{ textAlign: 'center' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -731,15 +728,33 @@ export default function DashboardPage() {
                         {formatIndianNumber(txn.amount)}
                       </td>
                       <td style={{ textAlign: 'center' }}>
-                        <button
-                          onClick={() => setTransactionToDelete(txn)}
-                          className="btn-table-delete"
-                          title="Delete expense"
-                          aria-label={`Delete expense from ${txn.merchant}`}
-                          id={`btn-delete-txn-${txn._id}`}
+                        <div
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '0.35rem',
+                          }}
                         >
-                          <Trash2 size={15} />
-                        </button>
+                          <button
+                            onClick={() => setTransactionToEdit(txn)}
+                            className="btn-table-edit"
+                            title="Edit expense"
+                            aria-label={`Edit expense from ${txn.merchant}`}
+                            id={`btn-edit-txn-${txn._id}`}
+                          >
+                            <Pencil size={15} />
+                          </button>
+                          <button
+                            onClick={() => setTransactionToDelete(txn)}
+                            className="btn-table-delete"
+                            title="Delete expense"
+                            aria-label={`Delete expense from ${txn.merchant}`}
+                            id={`btn-delete-txn-${txn._id}`}
+                          >
+                            <Trash2 size={15} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -789,6 +804,15 @@ export default function DashboardPage() {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onSuccess={handleTransactionAdded}
+        currencySymbol={currency}
+      />
+
+      {/* Edit Transaction Modal */}
+      <EditTransactionModal
+        isOpen={Boolean(transactionToEdit)}
+        onClose={() => setTransactionToEdit(null)}
+        onSuccess={handleTransactionUpdated}
+        transaction={transactionToEdit}
         currencySymbol={currency}
       />
 
