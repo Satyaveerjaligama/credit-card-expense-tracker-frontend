@@ -16,19 +16,8 @@ import {
   Calendar,
 } from 'lucide-react';
 
-const CATEGORIES = [
-  'Dining',
-  'Shopping',
-  'Groceries',
-  'Utilities',
-  'Travel',
-  'Entertainment',
-  'Healthcare',
-  'Education',
-  'Subscriptions',
-  'Fuel',
-  'Other',
-];
+import CategorySelect, { CATEGORY_DETAILS, CATEGORIES } from './CategorySelect';
+import DatePickerInput from './DatePickerInput';
 
 const SAMPLE_SMS = [
   {
@@ -316,37 +305,29 @@ export default function AddTransactionModal({ isOpen, onClose, onSuccess, curren
               </div>
             </div>
 
-            <div className="modal-form-grid">
-              <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label" htmlFor="expense-category">
-                  Category
-                </label>
-                <select
-                  id="expense-category"
-                  className="form-select"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                >
-                  {CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            {/* Category Row */}
+            <div className="form-group" style={{ marginBottom: '1rem' }}>
+              <label className="form-label" htmlFor="expense-category">
+                Category
+              </label>
+              <CategorySelect
+                id="expense-category"
+                value={category}
+                onChange={(val) => setCategory(val)}
+              />
+            </div>
 
-              <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label" htmlFor="expense-date">
-                  Date
-                </label>
-                <input
-                  type="date"
-                  id="expense-date"
-                  className="form-input"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                />
-              </div>
+            {/* Date Row */}
+            <div className="form-group" style={{ marginBottom: '1rem' }}>
+              <label className="form-label" htmlFor="expense-date">
+                Date
+              </label>
+              <DatePickerInput
+                id="expense-date"
+                value={date}
+                onChange={(val) => setDate(val)}
+                align="left"
+              />
             </div>
 
             <div className="form-group" style={{ marginBottom: '1.25rem' }}>
@@ -504,7 +485,28 @@ export default function AddTransactionModal({ isOpen, onClose, onSuccess, curren
                   </div>
                   <div>
                     <span style={{ color: 'var(--text-muted)' }}>Category:</span>{' '}
-                    <span className="badge badge-lavender">{parsedData.category}</span>
+                    {(() => {
+                      const catMeta = CATEGORY_DETAILS[parsedData.category] || CATEGORY_DETAILS.Other;
+                      const CatIcon = catMeta.icon;
+                      return (
+                        <span
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.3rem',
+                            padding: '0.15rem 0.5rem',
+                            borderRadius: '6px',
+                            backgroundColor: catMeta.bgColor,
+                            color: catMeta.color,
+                            fontWeight: 600,
+                            fontSize: '0.75rem',
+                          }}
+                        >
+                          <CatIcon size={12} strokeWidth={2.4} />
+                          {parsedData.category}
+                        </span>
+                      );
+                    })()}
                   </div>
                   <div>
                     <span style={{ color: 'var(--text-muted)' }}>Card:</span>{' '}

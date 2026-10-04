@@ -627,7 +627,7 @@ export default function DashboardPage() {
                 <th>Merchant</th>
                 <th>Category</th>
                 <th>Source</th>
-                <th>Encrypted Notes</th>
+                <th>Notes</th>
                 <th style={{ textAlign: 'right' }}>Amount</th>
                 <th style={{ textAlign: 'center' }}>Actions</th>
               </tr>

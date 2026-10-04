@@ -3,29 +3,16 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../lib/api';
 import { formatIndianNumber } from '../lib/formatters';
-import CustomDropdown from './CustomDropdown';
+import CategorySelect from './CategorySelect';
+import DatePickerInput from './DatePickerInput';
+
 import {
   X,
   Pencil,
   Lock,
   AlertTriangle,
   Check,
-  Tag,
 } from 'lucide-react';
-
-const CATEGORY_OPTIONS = [
-  { value: 'Dining', label: 'Dining' },
-  { value: 'Shopping', label: 'Shopping' },
-  { value: 'Groceries', label: 'Groceries' },
-  { value: 'Utilities', label: 'Utilities' },
-  { value: 'Travel', label: 'Travel' },
-  { value: 'Entertainment', label: 'Entertainment' },
-  { value: 'Healthcare', label: 'Healthcare' },
-  { value: 'Education', label: 'Education' },
-  { value: 'Subscriptions', label: 'Subscriptions' },
-  { value: 'Fuel', label: 'Fuel' },
-  { value: 'Other', label: 'Other' },
-];
 
 /**
  * Helper to safely extract local YYYY-MM-DD from an ISO date or Date object
@@ -414,52 +401,46 @@ export default function EditTransactionModal({
             </div>
           </div>
 
-          {/* Row 2: Category & Date */}
-          <div className="modal-form-grid">
-            <div className="form-group" style={{ marginBottom: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem', flexWrap: 'wrap', gap: '0.25rem' }}>
-                <label className="form-label" htmlFor="edit-expense-category" style={{ marginBottom: 0 }}>
-                  Category
-                </label>
-                {isCategoryModified && (
-                  <span className="badge badge-amber" style={{ fontSize: '0.65rem', padding: '0.1rem 0.35rem' }}>
-                    Modified
-                  </span>
-                )}
-              </div>
-              <CustomDropdown
-                id="edit-expense-category"
-                value={category}
-                onChange={(val) => setCategory(val)}
-                options={CATEGORY_OPTIONS}
-                icon={Tag}
-                width="100%"
-                align="left"
-              />
+          {/* Row 2: Category */}
+          <div className="form-group" style={{ marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem', flexWrap: 'wrap', gap: '0.25rem' }}>
+              <label className="form-label" htmlFor="edit-expense-category" style={{ marginBottom: 0 }}>
+                Category
+              </label>
+              {isCategoryModified && (
+                <span className="badge badge-amber" style={{ fontSize: '0.65rem', padding: '0.1rem 0.35rem' }}>
+                  Modified
+                </span>
+              )}
             </div>
-
-            <div className="form-group" style={{ marginBottom: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem', flexWrap: 'wrap', gap: '0.25rem' }}>
-                <label className="form-label" htmlFor="edit-expense-date" style={{ marginBottom: 0 }}>
-                  Date
-                </label>
-                {isDateModified && (
-                  <span className="badge badge-amber" style={{ fontSize: '0.65rem', padding: '0.1rem 0.35rem' }}>
-                    Modified
-                  </span>
-                )}
-              </div>
-              <input
-                type="date"
-                id="edit-expense-date"
-                className="form-input"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-              />
-            </div>
+            <CategorySelect
+              id="edit-expense-category"
+              value={category}
+              onChange={(val) => setCategory(val)}
+            />
           </div>
 
-          {/* Row 3: Encrypted Notes */}
+          {/* Row 3: Date */}
+          <div className="form-group" style={{ marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem', flexWrap: 'wrap', gap: '0.25rem' }}>
+              <label className="form-label" htmlFor="edit-expense-date" style={{ marginBottom: 0 }}>
+                Date
+              </label>
+              {isDateModified && (
+                <span className="badge badge-amber" style={{ fontSize: '0.65rem', padding: '0.1rem 0.35rem' }}>
+                  Modified
+                </span>
+              )}
+            </div>
+            <DatePickerInput
+              id="edit-expense-date"
+              value={date}
+              onChange={(val) => setDate(val)}
+              align="left"
+            />
+          </div>
+
+          {/* Row 3: Notes */}
           <div className="form-group" style={{ marginBottom: '1.25rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem', flexWrap: 'wrap', gap: '0.35rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>

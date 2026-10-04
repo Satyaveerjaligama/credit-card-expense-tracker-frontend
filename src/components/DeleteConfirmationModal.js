@@ -220,7 +220,7 @@ export default function DeleteConfirmationModal({
             </div>
           </div>
 
-          {/* Encrypted Notes (if any) */}
+          {/* Notes (if any) */}
           {transaction.notes && (
             <div
               style={{
