@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { api } from '../lib/api';
 
@@ -12,6 +12,9 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
+  const hasVerifiedRef = useRef(false);
+
+  const isAuthPage = pathname === '/login' || pathname === '/register';
 
   useEffect(() => {
     const savedToken = localStorage.getItem('cc_token');
@@ -26,35 +29,43 @@ export function AuthProvider({ children }) {
           // ignore parsing error
         }
       }
-      // Verify token with backend
-      api
-        .getMe()
-        .then((res) => {
-          if (res.success && res.user) {
-            setUser(res.user);
-            localStorage.setItem('cc_user', JSON.stringify(res.user));
-          }
-        })
-        .catch(() => {
-          // Invalid token
-          localStorage.removeItem('cc_token');
-          localStorage.removeItem('cc_user');
-          setUser(null);
-          setToken(null);
-          if (pathname !== '/login' && pathname !== '/register') {
-            router.push('/login');
-          }
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+
+      if (!hasVerifiedRef.current) {
+        hasVerifiedRef.current = true;
+        api
+          .getMe()
+          .then((res) => {
+            if (res.success && res.user) {
+              setUser(res.user);
+              localStorage.setItem('cc_user', JSON.stringify(res.user));
+            }
+          })
+          .catch((err) => {
+            // Only clear token if backend explicitly rejected auth (401 or 403)
+            // Don't log user out on temporary connection issues or cold start delays
+            if (err?.status === 401 || err?.status === 403) {
+              localStorage.removeItem('cc_token');
+              localStorage.removeItem('cc_user');
+              setUser(null);
+              setToken(null);
+              if (!isAuthPage) {
+                router.push('/login');
+              }
+            }
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      } else {
+        setLoading(false);
+      }
     } else {
       setLoading(false);
-      if (pathname !== '/login' && pathname !== '/register') {
+      if (!isAuthPage) {
         router.push('/login');
       }
     }
-  }, [pathname, router]);
+  }, [pathname, router, isAuthPage]);
 
   const login = async (credentials) => {
     const res = await api.login(credentials);

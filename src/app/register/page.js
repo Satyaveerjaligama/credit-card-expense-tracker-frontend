@@ -5,8 +5,6 @@ import NextLink from 'next/link';
 import { useAuth } from '../../context/AuthContext';
 import {
   CreditCard,
-  Target,
-  Lock,
   ArrowRight,
   ShieldCheck,
   AlertTriangle,

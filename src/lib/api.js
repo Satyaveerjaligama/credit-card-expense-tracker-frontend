@@ -22,10 +22,25 @@ async function request(endpoint, options = {}) {
 
   try {
     const res = await fetch(`${API_BASE_URL}${endpoint}`, config);
-    const data = await res.json();
+
+    let data;
+    const contentType = res.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+      try {
+        data = await res.json();
+      } catch {
+        data = { message: 'Invalid JSON response from server' };
+      }
+    } else {
+      const text = await res.text();
+      data = { message: text || `Server returned HTTP ${res.status}` };
+    }
 
     if (!res.ok) {
-      const errorMsg = data.message || (data.errors && data.errors[0]?.msg) || 'API Request failed';
+      const errorMsg =
+        data?.message ||
+        (data?.errors && data.errors[0]?.msg) ||
+        `API Request failed with status ${res.status}`;
       const error = new Error(errorMsg);
       error.status = res.status;
       error.data = data;
