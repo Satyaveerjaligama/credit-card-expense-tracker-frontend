@@ -194,6 +194,7 @@ export default function LoginPage() {
           <span style={{ color: 'var(--text-muted)' }}>Don&apos;t have an account? </span>
           <NextLink
             href="/register"
+            prefetch={false}
             id="link-go-to-register"
             style={{ color: 'var(--sage-600)', fontWeight: 600, textDecoration: 'none' }}
           >

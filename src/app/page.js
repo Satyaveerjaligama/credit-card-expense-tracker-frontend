@@ -296,6 +296,7 @@ export default function DashboardPage() {
 
           <NextLink
             href="/limits"
+            prefetch={false}
             id="link-adjust-limits"
             className="btn btn-secondary btn-sm"
             style={{
@@ -439,7 +440,7 @@ export default function DashboardPage() {
                 Personal Spending Limit
               </span>
             </div>
-            <NextLink href="/limits" style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--sage-700)', textDecoration: 'none' }}>
+            <NextLink href="/limits" prefetch={false} style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--sage-700)', textDecoration: 'none' }}>
               Edit Limit →
             </NextLink>
           </div>

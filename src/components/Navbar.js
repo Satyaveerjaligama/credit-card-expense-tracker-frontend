@@ -58,6 +58,7 @@ export default function Navbar() {
         {/* Brand / App Name */}
         <Link
           href="/"
+          prefetch={false}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -119,6 +120,7 @@ export default function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
+                  prefetch={false}
                   id={`nav-link-${item.name.toLowerCase()}`}
                   style={{
                     display: 'flex',
@@ -160,6 +162,7 @@ export default function Navbar() {
                 {/* Account Section with User Name */}
                 <Link
                   href="/account"
+                  prefetch={false}
                   id="nav-account-section"
                   style={{
                     display: 'flex',
@@ -283,10 +286,10 @@ export default function Navbar() {
           ) : (
             // Guest / Logged out state
             <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              <Link href="/login" className="btn btn-secondary btn-sm" style={{ borderRadius: 'var(--radius-full)' }}>
+              <Link href="/login" prefetch={false} className="btn btn-secondary btn-sm" style={{ borderRadius: 'var(--radius-full)' }}>
                 Sign In
               </Link>
-              <Link href="/register" className="btn btn-primary btn-sm" style={{ borderRadius: 'var(--radius-full)' }}>
+              <Link href="/register" prefetch={false} className="btn btn-primary btn-sm" style={{ borderRadius: 'var(--radius-full)' }}>
                 Get Started
               </Link>
             </div>
@@ -311,6 +314,7 @@ export default function Navbar() {
           {/* Account Profile Card in Mobile */}
           <Link
             href="/account"
+            prefetch={false}
             onClick={() => setMobileMenuOpen(false)}
             style={{
               display: 'flex',
@@ -363,6 +367,7 @@ export default function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
+                  prefetch={false}
                   onClick={() => setMobileMenuOpen(false)}
                   style={{
                     display: 'flex',
